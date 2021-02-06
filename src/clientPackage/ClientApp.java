@@ -11,6 +11,7 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,7 +46,7 @@ public  class ClientApp extends Application {
 
     public ClientApp() {
         try {
-            clientSocket = new Socket("127.0.0.1", 5555);
+            clientSocket = new Socket("127.0.0.1", 5005);
             clientInputStreamFromServer = new DataInputStream(clientSocket.getInputStream());
             clientPrintStreamToServer = new PrintStream(clientSocket.getOutputStream());
         } catch (IOException ex) {
@@ -134,6 +135,10 @@ public  class ClientApp extends Application {
                     break;
                 case "leftPlayer":
                     handleLeftPlayer();
+                    break;
+
+                case "handleErrorsRes":
+                    handleErrors(json);
                     break;
                 default:
                     break;
@@ -336,7 +341,7 @@ public  class ClientApp extends Application {
                 primaryStageClone.setScene(scene6);
                 primaryStageClone.setTitle(clientEmail);
                 primaryStageClone.show();
-            } catch (IOException | ParseException ex) {
+            } catch (IOException | ParseException | JSONException ex) {
                 Logger.getLogger(ClientApp.class.getName()).log(Level.SEVERE, null, ex);
             }
         });

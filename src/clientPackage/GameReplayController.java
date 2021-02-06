@@ -17,7 +17,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import static clientPackage.ClientApp.primaryStageClone;
@@ -90,17 +92,28 @@ public class GameReplayController implements Initializable {
 
     }
 
-    public void printMoves(String jsonBoard) {
+    public void printMoves(String jsonBoard) throws JSONException {
         JSONArray arrayJson = new JSONArray(jsonBoard);
         Timeline timeline = new Timeline();
+        JSONParser parser = new JSONParser();
         int j = 0;
-        for (Object object : arrayJson) {
-            JSONObject objectInArray = (JSONObject) object;
+        for (int i=0; i < arrayJson.length(); i++) {
+//        for (Object object : arrayJson) {
+
+            JSONObject objectInArray = (JSONObject) arrayJson.getJSONObject(i);
             timeline.getKeyFrames().add(
                     new KeyFrame(Duration.millis((j+1)*1000),
                             e -> {
-                                character = objectInArray.get("Character").toString();
-                                coordinates = Integer.parseInt(objectInArray.get("Coordinates").toString());
+                                try {
+                                    character = objectInArray.get("Character").toString();
+                                } catch (JSONException jsonException) {
+                                    jsonException.printStackTrace();
+                                }
+                                try {
+                                    coordinates = Integer.parseInt(objectInArray.get("Coordinates").toString());
+                                } catch (JSONException jsonException) {
+                                    jsonException.printStackTrace();
+                                }
                                 switch (coordinates) {
                                     case 0:
                                         button0.setFont(Font.font("Arial", FontWeight.BOLD, 60));
