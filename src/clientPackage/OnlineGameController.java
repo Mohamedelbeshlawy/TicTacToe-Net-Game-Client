@@ -105,6 +105,7 @@ public class OnlineGameController implements Initializable {
                 GameSchema.setRecordBySecondPlayer(gameID);
             }
             Platform.runLater(() -> {
+                PlayerSchema.updateStatus(myEmail, 1);
                 Alert gameSaved = new Alert(Alert.AlertType.INFORMATION);
                 gameSaved.setTitle("Game Saved");
                 gameSaved.setHeaderText("Message");
